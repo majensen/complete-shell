@@ -119,7 +119,7 @@ complete-shell:search() {
 
   print-search-entry() {
     installed=
-    comp_file=$COMPLETE_SHELL_BASH_DIR/$name.bash
+   comp_file=$COMPLETE_SHELL_BASH_DIR/$name.bash
     if [[ -f $comp_file ]]; then
       installed='+'
     fi
@@ -388,22 +388,37 @@ complete-shell:compile() {
     [[ -f $comp_file ]] ||
       error "File '$comp_file' does not exist."
 
-    # Make sure we don't pick up old compiler functions:
-    unset -f N O A C V
+    # subsub
+    local comp_file_d=
+    [[ -d $COMPLETE_SHELL_COMP/$comp_file.d ]] &&
+      comp_file_d=$COMPLETE_SHELL_COMP/$comp_file.d
 
-    COMPLETE_SHELL_SOURCE=$comp_file source "$comp_file"
+    local comp_files=()
 
-    for format in "${formats[@]}"; do
-      if $option_print; then
-        out=/dev/stdout
+    comp_files+=($comp_file)
+    [[ $comp_file_d ]] && comp_files+=($(find $comp_file_d -name "*.comp"))
 
-      else
-        dir=$(get-output-dir)
-        name=$completion_name
-        out="$dir/$name.$format"
-      fi
+    local cname=$completion_name # leave no trace
+    for cfile in ${comp_files[*]} ; do
+      # Make sure we don't pick up old compiler functions:
+      unset -f N O A C V
+      
+      COMPLETE_SHELL_SOURCE=$cfile source "$cfile"
 
-      "emit-$format" > "$out"
+      [[ $cfile == */* ]] && cname=${cfile##*/} && cname=${cname%.comp}
+      echo $cname
+      for format in "${formats[@]}"; do
+	if $option_print; then
+          out=/dev/stdout
+
+	else
+          dir=$(get-output-dir)
+          name=$cname
+          out="$dir/$name.$format"
+	fi
+
+	"emit-$format" > "$out"
+      done
     done
   done
 }

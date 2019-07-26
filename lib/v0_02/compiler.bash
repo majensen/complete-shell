@@ -120,13 +120,13 @@ C() {
       *) die "Unknown C argument '$arg'";;
     esac
   done
-  
+
   # subsub
   local cmd=$(get-value cmd_name)
   auxf=
   [[ $auxd && -f $auxd/$name.$cmd.comp ]] &&
       auxf=_${name//./_}_$cmd
-  
+
   set-value cmd_name "$name"
   set-value cmd_desc "$desc"
   set-value cmd_auxf "$auxf"
