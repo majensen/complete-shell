@@ -57,7 +57,7 @@ N() {
 
   # subsub
   auxd=
-  local complete_shell_comp=$COMPLETE_SHELL_PATH/comp
+  local complete_shell_comp=${COMPLETE_SHELL_COMP:-$COMPLETE_SHELL_PATH/comp}
   [[ -d $complete_shell_comp/${name#*.}.comp.d ]] &&
       auxd=$complete_shell_comp/${name#*.}.comp.d
 
@@ -123,6 +123,7 @@ C() {
 
   # subsub
   local cmd=$(get-value cmd_name)
+  # auxd=$(get-value auxy_dir)
   auxf=
   [[ $auxd && -f $auxd/$name.$cmd.comp ]] &&
       auxf=_${name//./_}_$cmd
