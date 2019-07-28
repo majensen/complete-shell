@@ -394,7 +394,6 @@ complete-shell:compile() {
       comp_file_d=$COMPLETE_SHELL_COMP/$comp_file.d
 
     local comp_files=()
-
     comp_files+=($comp_file)
     [[ $comp_file_d ]] && comp_files+=($(find $comp_file_d -name "*.comp"))
 
@@ -402,6 +401,10 @@ complete-shell:compile() {
     for cfile in ${comp_files[*]} ; do
       # Make sure we don't pick up old compiler functions:
       unset -f N O A C V
+      # Clear previous compile
+      for v in ${!_00*} ; do
+	  unset $v
+      done
       
       COMPLETE_SHELL_SOURCE=$cfile source "$cfile"
 
