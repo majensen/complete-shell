@@ -25,6 +25,7 @@ compgen-v0_02() {
   complete-option-names ||
   complete-option-values ||
   complete-sub-commands ||
+  complete-subsubs ||
   complete-arguments ||
   true
 }
@@ -193,6 +194,33 @@ complete-sub-commands() {
     fi
   done
 
+  return 0
+}
+
+complete-subsubs() {
+  [[ $comp_snum ]] && {
+    cmd_auxf=$(echo cmd_auxf_$comp_snum)
+    [[ ! ${!cmd_auxf} ]] &&
+      return 0
+    cmd_auxf=${!cmd_auxf}
+    if ! declare -F $cmd_auxf &> /dev/null ; then
+      auxf_src=$COMPLETE_SHELL_BASH_DIR/${sub_cmds[$comp_snum]}.$cmd_name.bash
+      if [ -f $auxf_src ] ; then 
+	. $auxf_src
+      else
+	echo "No aux comp file called $auxf_src" 1>&2
+	return 0
+      fi
+    fi
+    [[ $COMP_LINE =~ ^.*(${sub_cmds[$comp_snum]}.*) ]] && {
+      COMP_LINE=${BASH_REMATCH[1]}
+      $cmd_auxf # do aux func
+    }
+  }
+  for i in "${COMPREPLY[@]}" ; do
+    echo $i
+  done
+  # close but doesn't quite work 
   return 0
 }
 
