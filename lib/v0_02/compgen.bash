@@ -220,7 +220,6 @@ complete-subsubs() {
   for i in "${COMPREPLY[@]}" ; do
     echo $i
   done
-  # close but doesn't quite work 
   return 0
 }
 
