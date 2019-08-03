@@ -323,6 +323,7 @@ varstems() {
   local complete_shell_compiler
   printf -v complete_shell_compiler "$COMPLETE_SHELL_ROOT/lib/%s/compiler.bash" v0_02
   [[ -f $complete_shell_compiler ]] || return 1
+  # brittle - depends on code style/convention
   stems+=($(sed -e '/^N()/q' $complete_shell_compiler |
     grep "^[[:space:]]*[a-z_]\+=[0-9]\+[[:space:]]*$" |
     cut -d"=" -f 1))
