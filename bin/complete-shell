@@ -108,7 +108,7 @@ complete-shell:config() {
     touch "$COMPLETE_SHELL_BASE/_config"
 
   else
-    error "Too many aruments for 'complete-shell config'"
+    error "Too many arguments for 'complete-shell config'"
   fi
 }
 
@@ -234,6 +234,8 @@ complete-shell:add() (
 
     elif [[ ! -h $COMPLETE_SHELL_COMP/${comp_file##*/} ]]; then
       cp "$comp_file" "$COMPLETE_SHELL_COMP/"
+      [[ -d $comp_file.d ]] &&
+	cp -R "$comp_file.d" "$COMPLETE_SHELL_COMP"
       bash_file=${comp_file%.comp}.bash
       [[ -f $bash_file ]] &&
         cp "$bash_file" "$COMPLETE_SHELL_COMP/"
@@ -390,8 +392,8 @@ complete-shell:compile() {
 
     # subsub
     local comp_file_d=
-    [[ -d $COMPLETE_SHELL_COMP/$comp_file.d ]] &&
-      comp_file_d=$COMPLETE_SHELL_COMP/$comp_file.d
+    [[ -d $comp_file.d ]] &&
+      comp_file_d=$comp_file.d
 
     local comp_files=()
     comp_files+=($comp_file)

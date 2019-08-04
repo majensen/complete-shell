@@ -28,6 +28,11 @@ __complete-shell:compgen() {
     return
   fi
 
+  : "${COMPLETE_SHELL_PATH:=$HOME/.complete-shell}"
+  : "${COMPLETE_SHELL_BASE:=${COMPLETE_SHELL_PATH##*:}}"
+  [[ $COMPLETE_SHELL_BASE == "$COMPLETE_SHELL_ROOT" ]] && COMPLETE_SHELL_BASE+=/base
+  : "${COMPLETE_SHELL_BASH_DIR:=$COMPLETE_SHELL_BASE/bash-completion/completions}"
+
   # shellcheck disable=2046
   local $(source "$COMPLETE_SHELL_ROOT/lib/config.bash" vars)
   source "$COMPLETE_SHELL_ROOT/lib/config.bash" get
@@ -59,6 +64,7 @@ __complete-shell:compgen() {
   local hints=()
   while true; do
     local line comps=''
+    ## completions are computed HEREvvv ##
     while IFS=$'\n' read -r line; do
       if [[ $line =~ ^\$\  ]]; then
         eval "${line#\$\ }"
