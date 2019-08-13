@@ -14,8 +14,8 @@ The contribution described here is an attempt at a general solution to the subco
 * No modification to the compdef DSL
 * Minimal modification to the compiler
 * Complete backward compatibility for existing compdefs
-* Transparent installation with existing `compdef install`
-* A natural generalization of the system, rather than kludging in one more level of subcommands
+* Transparent processing with `complete-shell add`, `complete-shell compile`, etc.
+* A natural generalization of the system, rather than kludging in one more level of subcommands.
 
 Ideally, the user would never know the capability existed until she needed it, and then it would just work.
 
@@ -23,7 +23,7 @@ Ideally, the user would never know the capability existed until she needed it, a
 
 To gain these features with minimal overall changes, we introduce the concept of "auxiliary compdefs", that are associated with a command's main compdef. These are stored in `$COMPLETE_SHELL_PATH/comp/` along with the main compdef in the `<command>.compdef.d/` directory.
 
-The auxiliary compdefs specify completion for _sub_commands of the main command, using the regular compdef DSL. Within the _sub_command DSL, the `C` statements are used to define completions for the _subsub_commands. By representing the command structure in the source _directories_, the DSL files remain completely flat and preserve the original DSL spec.
+The auxiliary compdefs specify completion for *sub*commands of the main command, using the regular compdef DSL. Within the *sub*command DSL, the `C` statements are used to define completions for the *sub-sub*commands. By representing the command structure in the source _directories_, the DSL files remain completely flat and preserve the original DSL spec.
 
 Each subcommand with subsubs is represented by an auxiliary compdef with the following naming convention
 
@@ -92,7 +92,7 @@ Should just work. For example, installing a WIP docker completion:
     load — Load an image from a tar archive or STDIN
     dobby:complete-docker maj$ docker image ls --<TAB>
     --help — Help for ls subsub 
-    	--fake — Fake for demo 
+    --fake — Fake for demo 
     dobby:complete-docker maj$ docker image ls --help<RET>
 
     Usage:	docker image ls [OPTIONS] [REPOSITORY[:TAG]]
